@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leave Approval Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom CSS for Inter font */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5; /* Light grey background */
+        }
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen bg-gray-100 p-4">
+
+    <div id="main-container" class="w-full max-w-4xl bg-white rounded-xl shadow-2xl overflow-hidden md:flex">
+
+        <div id="auth-section" class="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center items-center">
+            <h2 id="auth-title" class="text-3xl font-bold text-gray-800 mb-6">Login</h2>
+
+            <form id="login-form" class="w-full max-w-sm space-y-6">
+                <div>
+                    <label for="login-email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                    <input type="email" id="login-email" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="your@example.com" required>
+                </div>
+                <div>
+                    <label for="login-password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                    <input type="password" id="login-password" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="" required>
+                </div>
+                <button type="submit" class="w-full py-3 px-4 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-300 ease-in-out">Login</button>
+            </form>
+
+            <form id="register-form" class="w-full max-w-sm space-y-6 hidden">
+                <div>
+                    <label for="register-name" class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                    <input type="text" id="register-name" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="John Doe" required>
+                </div>
+                <div>
+                    <label for="register-email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                    <input type="email" id="register-email" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="your@example.com" required>
+                </div>
+                <div>
+                    <label for="register-password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                    <input type="password" id="register-password" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="" required>
+                </div>
+                <div>
+                    <label for="register-role" class="block text-sm font-medium text-gray-700 mb-1">Role</label>
+                    <select id="register-role" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
+                        <option value="">Select Role</option>
+                        <option value="student">Student</option>
+                        <option value="teacher">Teacher</option>
+                        <option value="admin">Admin</option> </select>
+                </div>
+                <button type="submit" class="w-full py-3 px-4 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition duration-300 ease-in-out">Register</button>
+            </form>
+
+            <p class="mt-6 text-gray-600 text-sm">
+                <span id="toggle-auth-text">Don't have an account?</span>
+                <button id="toggle-auth-btn" class="text-blue-600 hover:underline font-medium ml-1">Register</button>
+            </p>
+        </div>
+
+        <div class="hidden md:block md:w-1/2 bg-gradient-to-br from-blue-500 to-purple-600 p-8 flex items-center justify-center">
+            <div class="text-white text-center">
+                <h3 class="text-3xl font-bold mb-4">Welcome to the Leave Portal!</h3>
+                <p class="text-lg opacity-90">Manage your leaves effortlessly.</p>
+                <svg class="mx-auto mt-8 w-32 h-32 text-white opacity-80" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.8 6-3.8s5.97 1.81 6 3.8c-1.29 1.94-3.5 3.22-6 3.22z"/>
+                </svg>
+            </div>
+        </div>
+
+        <div id="dashboard-section" class="w-full hidden p-8 md:p-10">
+            <header class="flex flex-col md:flex-row justify-between items-center mb-8 pb-4 border-b border-gray-200">
+                <h1 class="text-4xl font-extrabold text-gray-900 mb-4 md:mb-0">Dashboard</h1>
+                <div class="flex items-center space-x-4">
+                    <span id="user-display-name" class="text-lg font-medium text-gray-700"></span>
+                    <button id="logout-btn" class="px-4 py-2 bg-red-500 text-white rounded-lg shadow hover:bg-red-600 transition duration-300 ease-in-out">Logout</button>
+                </div>
+            </header>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <nav class="md:col-span-1 bg-gray-50 p-6 rounded-lg shadow-sm">
+                    <ul class="space-y-4">
+                        <li>
+                            <button id="nav-apply-leave" class="w-full text-left flex items-center p-3 rounded-lg text-gray-700 hover:bg-blue-100 hover:text-blue-700 transition duration-200 ease-in-out font-medium">
+                                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                Apply for Leave
+                            </button>
+                        </li>
+                        <li>
+                            <button id="nav-my-leaves" class="w-full text-left flex items-center p-3 rounded-lg text-gray-700 hover:bg-blue-100 hover:text-blue-700 transition duration-200 ease-in-out font-medium">
+                                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+                                My Leave Applications
+                            </button>
+                        </li>
+                        <li id="nav-pending-approvals-item" class="hidden">
+                            <button id="nav-pending-approvals" class="w-full text-left flex items-center p-3 rounded-lg text-gray-700 hover:bg-blue-100 hover:text-blue-700 transition duration-200 ease-in-out font-medium">
+                                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.001 12.001 0 002 12c0 2.757 1.125 5.228 2.938 7.072l-.001.002c.001.001.001.001.002.002A12.001 12.001 0 0012 22c2.757 0 5.228-1.125 7.072-2.938l.002-.001c.001-.001.001-.001.002-.002A12.001 12.001 0 0022 12c0-2.757-1.125-5.228-2.938-7.072l-.002-.001z"></path></svg>
+                                Pending Approvals
+                                <span id="pending-count" class="ml-auto bg-red-500 text-white text-xs font-semibold px-2.5 py-0.5 rounded-full">0</span>
+                            </button>
+                        </li>
+                    </ul>
+                </nav>
+
+                <div class="md:col-span-2 bg-white p-6 rounded-lg shadow-sm min-h-[500px]">
+                    <div id="apply-leave-section" class="content-section">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-6">Apply for Leave</h2>
+                        <form id="leave-application-form" class="space-y-6">
+                            <div>
+                                <label for="leave-type" class="block text-sm font-medium text-gray-700 mb-1">Leave Type</label>
+                                <select id="leave-type" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
+                                    <option value="">Select Leave Type</option>
+                                    <option value="sick">Sick Leave</option>
+                                    <option value="casual">Casual Leave</option>
+                                    <option value="family">Family Event</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="start-date" class="block text-sm font-medium text-gray-700 mb-1">Start Date</label>
+                                    <input type="date" id="start-date" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
+                                </div>
+                                <div>
+                                    <label for="end-date" class="block text-sm font-medium text-gray-700 mb-1">End Date</label>
+                                    <input type="date" id="end-date" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
+                                </div>
+                            </div>
+                            <div>
+                                <label for="leave-reason" class="block text-sm font-medium text-gray-700 mb-1">Reason</label>
+                                <textarea id="leave-reason" rows="4" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Briefly describe your reason for leave..." required></textarea>
+                            </div>
+                            <button type="submit" class="w-full py-3 px-4 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-300 ease-in-out">Submit Leave Request</button>
+                        </form>
+                    </div>
+
+                    <div id="my-leaves-section" class="content-section hidden">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-6">My Leave Applications</h2>
+                        <div id="my-leaves-list" class="space-y-4">
+                            <p class="text-gray-500" id="no-my-leaves-message">No leave applications submitted yet.</p>
+                        </div>
+                    </div>
+
+                    <div id="pending-approvals-section" class="content-section hidden">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-6">Pending Approvals</h2>
+                        <div id="pending-approvals-list" class="space-y-4">
+                            <p class="text-gray-500" id="no-pending-approvals-message">No pending leave requests.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="message-modal" class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center hidden z-50">
+        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-sm text-center">
+            <h3 id="modal-title" class="text-xl font-semibold text-gray-800 mb-4"></h3>
+            <p id="modal-message" class="text-gray-600 mb-6"></p>
+            <button id="modal-close-btn" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300">OK</button>
+        </div>
+    </div>
+
+    <script type="module">
+        // Firebase imports
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, addDoc, onSnapshot, collection, query, where, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBo987XLKfaUBaz84uW5ogL_hI5G90_fro",
+            authDomain: "leave-approval-app-73f2f.firebaseapp.com",
+            projectId: "leave-approval-app-73f2f",
+            storageBucket: "leave-approval-app-73f2f.firebasestorage.app",
+            messagingSenderId: "271181120254",
+            appId: "1:271181120254:web:8aa6e389d3aeea8d89dbaf",
+            measurementId: "G-CEBM2NC95P" // Optional, if you're not using Analytics
+        };
+
+        // Initialize Firebase
+        let app = initializeApp(firebaseConfig);
+        let db = getFirestore(app);
+        let auth = getAuth(app);
+        // const analytics = getAnalytics(app); // Uncomment if you plan to use Firebase Analytics
+
+        // Global variables for Firebase
+        let currentFirebaseUser = null; // Firebase Auth user object
+        let currentUserProfile = null; // User profile data from Firestore
+
+        // DOM Elements
+        const authSection = document.getElementById('auth-section');
+        const dashboardSection = document.getElementById('dashboard-section');
+        const authTitle = document.getElementById('auth-title');
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+        const toggleAuthText = document.getElementById('toggle-auth-text');
+        const toggleAuthBtn = document.getElementById('toggle-auth-btn');
+        const userDisplayName = document.getElementById('user-display-name');
+        const logoutBtn = document.getElementById('logout-btn');
+
+        const navApplyLeave = document.getElementById('nav-apply-leave');
+        const navMyLeaves = document.getElementById('nav-my-leaves');
+        const navPendingApprovals = document.getElementById('nav-pending-approvals');
+        const navPendingApprovalsItem = document.getElementById('nav-pending-approvals-item');
+        const pendingCount = document.getElementById('pending-count');
+
+        const applyLeaveSection = document.getElementById('apply-leave-section');
+        const myLeavesSection = document.getElementById('my-leaves-section');
+        const pendingApprovalsSection = document.getElementById('pending-approvals-section');
+
+        const leaveApplicationForm = document.getElementById('leave-application-form');
+        const myLeavesList = document.getElementById('my-leaves-list');
+        const noMyLeavesMessage = document.getElementById('no-my-leaves-message');
+        const pendingApprovalsList = document.getElementById('pending-approvals-list');
+        const noPendingApprovalsMessage = document.getElementById('no-pending-approvals-message');
+
+        const messageModal = document.getElementById('message-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalMessage = document.getElementById('modal-message');
+        const modalCloseBtn = document.getElementById('modal-close-btn');
+
+        // App ID from Canvas environment (if applicable, otherwise use projectId)
+        // Note: For most Firebase web apps, you'd use the projectId for your Firestore paths.
+        // If '__app_id' is a specific environment variable for a different platform, keep it.
+        // Otherwise, it's safer to use 'firebaseConfig.projectId'.
+        const appId = firebaseConfig.projectId; 
+
+
+        // --- Utility Functions ---
+
+        /**
+         * Shows a custom modal message.
+         * @param {string} title - The title of the modal.
+         * @param {string} message - The message content.
+         */
+        function showMessageModal(title, message) {
+            modalTitle.textContent = title;
+            modalMessage.textContent = message;
+            messageModal.classList.remove('hidden');
+        }
+
+        /**
+         * Hides the custom modal message.
+         */
+        function hideMessageModal() {
+            messageModal.classList.add('hidden');
+        }
+
+        modalCloseBtn.addEventListener('click', hideMessageModal);
+
+        /**
+         * Fetches user profile from Firestore.
+         * @param {string} uid - The user's Firebase Auth UID.
+         * @returns {Promise<object|null>} The user profile object or null if not found.
+         */
+        async function getUserProfile(uid) {
+            // Using 'appId' (which is now firebaseConfig.projectId) for the base path
+            const userDocRef = doc(db, `artifacts/${appId}/users/${uid}/user_profile`, 'profile');
+            const userDocSnap = await getDoc(userDocRef);
+            if (userDocSnap.exists()) {
+                return userDocSnap.data();
+            }
+            return null;
+        }
+
+        /**
+         * Saves user profile to Firestore.
+         * @param {string} uid - The user's Firebase Auth UID.
+         * @param {object} profileData - The user's profile data.
+         */
+        async function saveUserProfile(uid, profileData) {
+            const userDocRef = doc(db, `artifacts/${appId}/users/${uid}/user_profile`, 'profile');
+            await setDoc(userDocRef, profileData, { merge: true });
+        }
+
+        // --- Auth Logic ---
+
+        /**
+         * Toggles between login and register forms.
+         */
+        toggleAuthBtn.addEventListener('click', () => {
+            if (loginForm.classList.contains('hidden')) {
+                // Currently showing register, switch to login
+                authTitle.textContent = 'Login';
+                loginForm.classList.remove('hidden');
+                registerForm.classList.add('hidden');
+                toggleAuthText.textContent = "Don't have an account?";
+                toggleAuthBtn.textContent = "Register";
+            } else {
+                // Currently showing login, switch to register
+                authTitle.textContent = 'Register';
+                loginForm.classList.add('hidden');
+                registerForm.classList.remove('hidden');
+                toggleAuthText.textContent = "Already have an account?";
+                toggleAuthBtn.textContent = "Login";
+            }
+        });
+
+        /**
+         * Handles user registration with Firebase Auth and stores profile in Firestore.
+         * @param {Event} event - The form submission event.
+         */
+        registerForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const name = document.getElementById('register-name').value;
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            const role = document.getElementById('register-role').value;
+
+            try {
+                // Create user with email and password in Firebase Auth
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                // Save user profile data to Firestore
+                await saveUserProfile(user.uid, {
+                    name,
+                    email,
+                    role,
+                    createdAt: new Date().toISOString()
+                });
+
+                showMessageModal('Registration Successful', 'You have successfully registered. Please login.');
+                // Switch to login form after successful registration
+                toggleAuthBtn.click();
+                registerForm.reset();
+            } catch (error) {
+                console.error("Registration error:", error);
+                let errorMessage = 'Registration failed. Please try again.';
+                if (error.code === 'auth/email-already-in-use') {
+                    errorMessage = 'This email is already registered. Please login or use a different email.';
+                } else if (error.code === 'auth/weak-password') {
+                    errorMessage = 'Password is too weak. Please use at least 6 characters.';
+                }
+                showMessageModal('Registration Failed', errorMessage);
+            }
+        });
+
+        /**
+         * Handles user login with Firebase Auth.
+         * @param {Event} event - The form submission event.
+         */
+        loginForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                // onAuthStateChanged listener will handle rendering the dashboard
+            } catch (error) {
+                console.error("Login error:", error);
+                let errorMessage = 'Login failed. Please check your email and password.';
+                if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+                    errorMessage = 'Invalid email or password.';
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMessage = 'Invalid email format.';
+                }
+                showMessageModal('Login Failed', errorMessage);
+            }
+        });
+
+        /**
+         * Handles user logout.
+         */
+        logoutBtn.addEventListener('click', async () => {
+            try {
+                await signOut(auth);
+                // onAuthStateChanged listener will handle hiding the dashboard
+                showMessageModal('Logged Out', 'You have been successfully logged out.');
+            } catch (error) {
+                console.error("Logout error:", error);
+                showMessageModal('Logout Failed', 'Could not log out. Please try again.');
+            }
+        });
+
+        // --- Dashboard & Leave Application Logic ---
+
+        /**
+         * Renders the dashboard based on the current user's role.
+         */
+        function renderDashboard() {
+            if (!currentFirebaseUser || !currentUserProfile) {
+                authSection.classList.remove('hidden');
+                dashboardSection.classList.add('hidden');
+                return;
+            }
+
+            authSection.classList.add('hidden');
+            dashboardSection.classList.remove('hidden');
+            userDisplayName.textContent = `Welcome, ${currentUserProfile.name} (${currentUserProfile.role.charAt(0).toUpperCase() + currentUserProfile.role.slice(1)})`;
+
+            // Show/hide pending approvals based on role
+            if (currentUserProfile.role === 'teacher' || currentUserProfile.role === 'admin') {
+                navPendingApprovalsItem.classList.remove('hidden');
+            } else {
+                navPendingApprovalsItem.classList.add('hidden');
+            }
+
+            // Default view: Apply for Leave
+            showSection('apply-leave-section');
+            // Real-time listeners will update counts and lists
+            setupFirestoreListeners();
+        }
+
+        /**
+         * Shows a specific content section and hides others.
+         * @param {string} sectionId - The ID of the section to show.
+         */
+        function showSection(sectionId) {
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            document.getElementById(sectionId).classList.remove('hidden');
+
+            // Update active navigation button styling (optional, but good UX)
+            document.querySelectorAll('nav button').forEach(btn => {
+                btn.classList.remove('bg-blue-100', 'text-blue-700');
+                btn.classList.add('text-gray-700', 'hover:bg-blue-100', 'hover:text-blue-700');
+            });
+            const activeBtn = document.querySelector(`#nav-${sectionId.replace('-section', '')}`);
+            if (activeBtn) {
+                activeBtn.classList.add('bg-blue-100', 'text-blue-700');
+                activeBtn.classList.remove('text-gray-700', 'hover:bg-blue-100', 'hover:text-blue-700');
+            }
+        }
+
+        navApplyLeave.addEventListener('click', () => showSection('apply-leave-section'));
+        navMyLeaves.addEventListener('click', () => showSection('my-leaves-section'));
+        navPendingApprovals.addEventListener('click', () => showSection('pending-approvals-section'));
+
+        /**
+         * Handles leave application submission to Firestore.
+         * @param {Event} event - The form submission event.
+         */
+        leaveApplicationForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            if (!currentFirebaseUser || !currentUserProfile) {
+                showMessageModal('Error', 'Please login to submit a leave request.');
+                return;
+            }
+
+            const leaveType = document.getElementById('leave-type').value;
+            const startDate = document.getElementById('start-date').value;
+            const endDate = document.getElementById('end-date').value;
+            const reason = document.getElementById('leave-reason').value;
+
+            // Basic date validation
+            if (new Date(startDate) > new Date(endDate)) {
+                showMessageModal('Invalid Dates', 'Start date cannot be after end date.');
+                return;
+            }
+
+            try {
+                const leaveApplicationsColRef = collection(db, `artifacts/${appId}/public/data/leave_applications`);
+                await addDoc(leaveApplicationsColRef, {
+                    applicantId: currentFirebaseUser.uid,
+                    applicantName: currentUserProfile.name,
+                    applicantRole: currentUserProfile.role,
+                    leaveType,
+                    startDate,
+                    endDate,
+                    reason,
+                    status: 'Pending', // Initial status
+                    submittedAt: new Date().toISOString()
+                });
+
+                showMessageModal('Success', 'Your leave request has been submitted successfully!');
+                leaveApplicationForm.reset();
+                // Firestore listener will automatically re-render lists and update counts
+            } catch (error) {
+                console.error("Error submitting leave request:", error);
+                showMessageModal('Submission Failed', 'Could not submit leave request. Please try again.');
+            }
+        });
+
+        /**
+         * Sets up real-time Firestore listeners for my leaves and pending approvals.
+         */
+        let unsubscribeMyLeaves = null;
+        let unsubscribePendingApprovals = null;
+
+        function setupFirestoreListeners() {
+            // Unsubscribe from previous listeners if they exist
+            if (unsubscribeMyLeaves) unsubscribeMyLeaves();
+            if (unsubscribePendingApprovals) unsubscribePendingApprovals();
+
+            if (!currentFirebaseUser || !currentUserProfile) {
+                return;
+            }
+
+            const leaveApplicationsColRef = collection(db, `artifacts/${appId}/public/data/leave_applications`);
+
+            // Listener for My Leave Applications
+            const myLeavesQuery = query(leaveApplicationsColRef, where("applicantId", "==", currentFirebaseUser.uid));
+            unsubscribeMyLeaves = onSnapshot(myLeavesQuery, (snapshot) => {
+                const userLeaves = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderMyLeaveApplications(userLeaves);
+            }, (error) => {
+                console.error("Error fetching my leave applications:", error);
+                showMessageModal('Error', 'Failed to load your leave applications.');
+            });
+
+            // Listener for Pending Approvals (role-based)
+            let pendingApprovalsQuery;
+            if (currentUserProfile.role === 'admin') {
+                pendingApprovalsQuery = query(leaveApplicationsColRef, where("status", "==", "Pending"));
+            } else if (currentUserProfile.role === 'teacher') {
+                pendingApprovalsQuery = query(leaveApplicationsColRef, where("status", "==", "Pending"), where("applicantRole", "==", "student"));
+            } else {
+                // No pending approvals for students
+                renderPendingApprovals([]);
+                updatePendingCount(0);
+                return;
+            }
+
+            unsubscribePendingApprovals = onSnapshot(pendingApprovalsQuery, (snapshot) => {
+                const pendingLeaves = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderPendingApprovals(pendingLeaves);
+                updatePendingCount(pendingLeaves.length);
+            }, (error) => {
+                console.error("Error fetching pending approvals:", error);
+                showMessageModal('Error', 'Failed to load pending approvals.');
+            });
+        }
+
+        /**
+         * Renders the list of current user's leave applications.
+         * @param {Array<object>} userLeaves - Array of leave application objects.
+         */
+        function renderMyLeaveApplications(userLeaves) {
+            myLeavesList.innerHTML = ''; // Clear previous list
+            if (userLeaves.length === 0) {
+                noMyLeavesMessage.classList.remove('hidden');
+            } else {
+                noMyLeavesMessage.classList.add('hidden');
+                userLeaves.forEach(leave => {
+                    const leaveCard = document.createElement('div');
+                    leaveCard.className = 'bg-white p-4 rounded-lg shadow border border-gray-200';
+                    leaveCard.innerHTML = `
+                        <div class="flex justify-between items-center mb-2">
+                            <h3 class="text-lg font-semibold text-gray-800">${leave.leaveType} Leave</h3>
+                            <span class="px-3 py-1 rounded-full text-xs font-medium ${
+                                leave.status === 'Approved' ? 'bg-green-100 text-green-800' :
+                                leave.status === 'Rejected' ? 'bg-red-100 text-red-800' :
+                                'bg-yellow-100 text-yellow-800'
+                            }">${leave.status}</span>
+                        </div>
+                        <p class="text-sm text-gray-600 mb-1">From: ${leave.startDate} to ${leave.endDate}</p>
+                        <p class="text-sm text-gray-600">Reason: ${leave.reason}</p>
+                        ${leave.approverRemarks ? `<p class="text-xs text-gray-500 mt-2">Remarks: ${leave.approverRemarks}</p>` : ''}
+                    `;
+                    myLeavesList.appendChild(leaveCard);
+                });
+            }
+        }
+
+        /**
+         * Renders the list of pending leave applications for approval.
+         * @param {Array<object>} pendingLeaves - Array of pending leave application objects.
+         */
+        function renderPendingApprovals(pendingLeaves) {
+            pendingApprovalsList.innerHTML = ''; // Clear previous list
+
+            if (pendingLeaves.length === 0) {
+                noPendingApprovalsMessage.classList.remove('hidden');
+            } else {
+                noPendingApprovalsMessage.classList.add('hidden');
+                pendingLeaves.forEach(leave => {
+                    const leaveCard = document.createElement('div');
+                    leaveCard.className = 'bg-white p-4 rounded-lg shadow border border-gray-200';
+                    leaveCard.innerHTML = `
+                        <div class="flex justify-between items-center mb-2">
+                            <h3 class="text-lg font-semibold text-gray-800">${leave.applicantName} - ${leave.leaveType} Leave</h3>
+                            <span class="px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">${leave.status}</span>
+                        </div>
+                        <p class="text-sm text-gray-600 mb-1">Role: ${leave.applicantRole.charAt(0).toUpperCase() + leave.applicantRole.slice(1)}</p>
+                        <p class="text-sm text-gray-600 mb-1">From: ${leave.startDate} to ${leave.endDate}</p>
+                        <p class="text-sm text-gray-600">Reason: ${leave.reason}</p>
+                        <div class="mt-4 flex space-x-2">
+                            <button class="approve-btn px-4 py-2 bg-green-500 text-white rounded-lg text-sm hover:bg-green-600 transition" data-id="${leave.id}">Approve</button>
+                            <button class="reject-btn px-4 py-2 bg-red-500 text-white rounded-lg text-sm hover:bg-red-600 transition" data-id="${leave.id}">Reject</button>
+                        </div>
+                    `;
+                    pendingApprovalsList.appendChild(leaveCard);
+                });
+
+                // Add event listeners for approve/reject buttons
+                document.querySelectorAll('.approve-btn').forEach(button => {
+                    button.addEventListener('click', (event) => handleApproval(event.target.dataset.id, 'Approved'));
+                });
+                document.querySelectorAll('.reject-btn').forEach(button => {
+                    button.addEventListener('click', (event) => handleApproval(event.target.dataset.id, 'Rejected'));
+                });
+            }
+        }
+
+        /**
+         * Updates the pending count displayed in the navigation.
+         * @param {number} count - The number of pending requests.
+         */
+        function updatePendingCount(count) {
+            pendingCount.textContent = count > 0 ? count : ''; // Show count only if > 0
+            if (count > 0) {
+                pendingCount.classList.remove('hidden');
+            } else {
+                pendingCount.classList.add('hidden');
+            }
+        }
+
+        /**
+         * Handles the approval or rejection of a leave request.
+         * @param {string} leaveId - The ID of the leave document.
+         * @param {string} status - The new status ('Approved' or 'Rejected').
+         */
+        async function handleApproval(leaveId, status) {
+            if (!currentFirebaseUser || !(currentUserProfile.role === 'teacher' || currentUserProfile.role === 'admin')) {
+                showMessageModal('Unauthorized', 'You do not have permission to perform this action.');
+                return;
+            }
+
+            try {
+                const leaveDocRef = doc(db, `artifacts/${appId}/public/data/leave_applications`, leaveId);
+                const remarks = prompt(`Add optional remarks for this ${status} leave request:`);
+
+                await updateDoc(leaveDocRef, {
+                    status: status,
+                    approvedBy: currentUserProfile.name,
+                    approvedById: currentFirebaseUser.uid,
+                    approvedAt: new Date().toISOString(),
+                    approverRemarks: remarks || null
+                });
+                showMessageModal('Success', `Leave request ${status.toLowerCase()} successfully.`);
+            } catch (error) {
+                console.error(`Error ${status.toLowerCase()} leave request:`, error);
+                showMessageModal('Error', `Failed to ${status.toLowerCase()} leave request. Please try again.`);
+            }
+        }
+
+        // --- Firebase Auth State Listener ---
+
+        /**
+         * Listens for changes in the Firebase authentication state.
+         * This is the primary entry point after page load or auth change.
+         */
+        onAuthStateChanged(auth, async (user) => {
+            currentFirebaseUser = user;
+            if (user) {
+                // User is signed in, fetch their profile
+                currentUserProfile = await getUserProfile(user.uid);
+                if (currentUserProfile) {
+                    renderDashboard();
+                } else {
+                    // This scenario shouldn't happen if registration is successful,
+                    // but it's a fallback for missing profile data.
+                    showMessageModal('Profile Missing', 'Your user profile could not be loaded. Please contact support.');
+                    await signOut(auth); // Force logout if profile is missing
+                }
+            } else {
+                // User is signed out
+                currentFirebaseUser = null;
+                currentUserProfile = null;
+                authSection.classList.remove('hidden');
+                dashboardSection.classList.add('hidden');
+
+                // Clear any active Firestore listeners
+                if (unsubscribeMyLeaves) {
+                    unsubscribeMyLeaves();
+                    unsubscribeMyLeaves = null;
+                }
+                if (unsubscribePendingApprovals) {
+                    unsubscribePendingApprovals();
+                    unsubscribePendingApprovals = null;
+                }
+
+                // Reset UI states
+                loginForm.reset();
+                registerForm.reset();
+                authTitle.textContent = 'Login';
+                loginForm.classList.remove('hidden');
+                registerForm.classList.add('hidden');
+                toggleAuthText.textContent = "Don't have an account?";
+                toggleAuthBtn.textContent = "Register";
+                pendingCount.textContent = '0';
+                pendingCount.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
